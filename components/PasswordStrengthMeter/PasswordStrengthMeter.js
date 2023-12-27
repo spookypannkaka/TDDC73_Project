@@ -57,7 +57,7 @@ function calculatePasswordStrength(password, minLength) {
 
 // The colors displayed in the horizontal bar for each corresponding level.
 const strengthColors = [
-    '#eee', // Too Short
+    '#eee',    // Too Short
     '#ff3e36', // Weak
     '#ff691f', // Weak
     '#f9d835', // Fair
@@ -93,5 +93,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
         overflow: 'hidden',
     },
-  });
-  
+});
