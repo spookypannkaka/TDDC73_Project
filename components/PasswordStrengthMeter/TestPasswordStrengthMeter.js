@@ -21,9 +21,24 @@ export default function TestPasswordStrengthMeter() {
                 )}
             </View>
 
-            <PasswordStrengthMeter password={password} minLength={minLength} />
+            <PasswordStrengthMeter password={password} minLength={minLength} /*algorithm={customizePasswordStrengthAlgorithm}*/ />
         </View>
     );
+}
+
+/*
+A testing function for passing in a customized strength algorithm to PasswordStrengthMeter.
+
+Should return a number 0-5.
+*/
+function customizePasswordStrengthAlgorithm(password, minLength) {
+    if (password.length < minLength) return 0;
+
+    let strengthPoints = 0;
+
+    if (password.length > 8) strengthPoints += 5;
+
+    return strengthPoints;
 }
 
 const styles = StyleSheet.create({

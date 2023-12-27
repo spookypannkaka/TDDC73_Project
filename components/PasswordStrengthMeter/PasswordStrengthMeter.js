@@ -9,10 +9,12 @@ Required props:
 
 Optional props:
   minLength (number): The minimum required length of the password. Default is 0.
+  algorithm (function): The algorithm used to calculate password strength. Needs to return a number 0-5. Default is calculatePasswordStrength.
 
 */
-export default function PasswordStrengthMeter( { password, minLength } ) {
-    const strength = calculatePasswordStrength(password, minLength);
+export default function PasswordStrengthMeter( { password, minLength, algorithm } ) {
+    let strength = algorithm(password, minLength);
+    strength = validateStrength(strength);
     const barWidth = `${(strength / 5) * 100}%`;
 
     return (
@@ -29,7 +31,7 @@ export default function PasswordStrengthMeter( { password, minLength } ) {
 }
 
 /*
-The function for calculating the strength of a password.
+The default function for calculating the strength of a password.
 It returns a number of "strength points", ranging from 0 to 5, depending on what the password string contains.
 
 A point is added if:
@@ -55,6 +57,21 @@ function calculatePasswordStrength(password, minLength) {
     return strengthPoints; // Returns a number between 0 and 5
 }
 
+// Evaluates if the password strength algorithm is properly defined, and adjusts its returned value if not.
+function validateStrength(value) {
+    // Check if value is a number, if not return 0 as default strength
+    if (typeof value !== 'number' || isNaN(value)) {
+        return 0;
+    }
+
+    // Ensure the value is rounded and between 0 to 5
+    value = Math.round(value);
+    if (value < 0) return 0;
+    if (value > 5) return 5;
+    return value;
+}
+
+
 // The colors displayed in the horizontal bar for each corresponding level.
 const strengthColors = [
     '#eee',    // Too Short
@@ -79,11 +96,13 @@ const strengthLabels = [
 PasswordStrengthMeter.propTypes = {
     password: PropTypes.string.isRequired,
     minLength: PropTypes.number,
+    algorithm: PropTypes.func,
 };
 
 // The default prop values for this component.
 PasswordStrengthMeter.defaultProps = {
     minLength: 0,
+    algorithm: calculatePasswordStrength,
 };
 
 const styles = StyleSheet.create({
