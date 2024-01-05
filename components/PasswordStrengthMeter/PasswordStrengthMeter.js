@@ -1,7 +1,9 @@
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 
 /*
+
 A React Native component that visualizes password strength in a horizontal bar.
 
 Required props:
@@ -10,9 +12,15 @@ Required props:
 Optional props:
   minLength (number): The minimum required length of the password. Default is 0.
   algorithm (function): The algorithm used to calculate password strength. Needs to return a number 0-5. Default is calculatePasswordStrength.
-
+  
 */
 export default function PasswordStrengthMeter( { password, minLength, algorithm } ) {
+
+    // As the password prop is required, throw an exception if it is not properly defined
+    if (typeof password !== 'string') {
+        throw new Error('Password prop is required and must be a string');
+    }
+
     let strength = algorithm(password, minLength);
     strength = validateStrength(strength);
     const barWidth = `${(strength / 5) * 100}%`;
@@ -24,7 +32,7 @@ export default function PasswordStrengthMeter( { password, minLength, algorithm 
                 <Text style={{ fontWeight: 'bold', color: strengthColors[strength] }}>{strengthLabels[strength]}</Text>
             </View>
             <View style={styles.barContainer}>
-                <View style={{ height: 10, width: barWidth, backgroundColor: strengthColors[strength] }} />
+                <View style={{ height: 10, width: barWidth, backgroundColor: strengthColors[strength] }} testID="strength-bar" />
             </View>
         </View>
     );
