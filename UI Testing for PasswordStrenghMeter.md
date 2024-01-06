@@ -25,8 +25,6 @@ I added
 ```
 to ``package.json`` to test using Jest.
 
-I also had to install Babel and do things in a .babelrc file ?
-
 ## Running the test
 I opened the root directory for TDDC73_Project and ran ``npm test``.
 
